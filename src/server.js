@@ -1,13 +1,8 @@
-import "./db";
 import express from "express";
 import morgan from "morgan";
 import globalRouter from "./routers/globalRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
-
-const PORT = 4000;
-
-console.log(process.cwd());
 
 const app = express();
 const logger = morgan("dev");
@@ -19,11 +14,7 @@ app.use(express.urlencoded({ extended: true })); //form의 value들을 이해할
 app.use("/", globalRouter);
 app.use("/videos", videoRouter); // url이 /videos로 시작하면 express는 비디오 라우터 안에 들어가고 그리고 /watch를 찾을거다
 app.use("/users", userRouter);
-
-const handleListening = () =>
-  console.log(`✅ Server listenting on port http://localhost:${PORT} 🚀`);
-
-app.listen(PORT, handleListening);
+export default app;
 /**
 1. 서버를 키면 상시로 request를 받을 준비를 함-> listening
 2. 브라우저가 서버에 페이지를 request -> 우리가 브라우저에 localhost:4000 (내 서버의 url)을 입력
