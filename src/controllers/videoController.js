@@ -16,20 +16,45 @@ export const home = async (req, res) => {
   console.log(videos);
   return res.render("home", { pageTitle: "Home", videos });
 };
-export const watch = (req, res) => {
+export const watch = async (req, res) => {
   const { id } = req.params;
-
-  return res.render("watch", { pageTitle: `Watching` });
+  const video = await Video.findById(id);
+  console.log(video);
+  if (!video) {
+    return res.render("404", { pageTitle: "Video not found." });
+  }
+  return res.render("watch", { pageTitle: video.title, video });
 };
-export const getEdit = (req, res) => {
+export const getEdit = async (req, res) => {
   const { id } = req.params;
-
-  return res.render("edit", { pageTitle: `Editing` });
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.render("404", { pageTitle: "Video not found." });
+  }
+  return res.render("edit", { pageTitle: `Editing: ${video.title}`, video });
 };
-export const postEdit = (req, res) => {
+export const postEdit = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body; //app.use(express.urlencoded({ extended: true })); 이거 덕분에 req.body를 받을 수 있다
 
+  const { title, description, hashtags } = req.body;
+  const video = await Video.exists({ _id: id }); //true false로 리턴해준다
+
+  if (video) {
+    return res.render("404", { pageTitle: "Video not found" });
+  }
+  await Video.findByIdAndUpdate(id, {
+    title,
+    description,
+    hashtags: hashtags
+      .split(",")
+      .map((word) => (word.startsWith("#") ? word : `#${word}`)),
+  });
+  // video.title = title;
+  // video.description = description;
+  // video.hashtags = hashtags
+  //   .split(",")
+  //   .map((word) => (word.startsWith("#") ? word : `#${word}`)); //해시태그로 시작하면 그냥 word로 리턴할 거고 아닐 경우 #을 붙여 리턴할거다
+  // await video.save();
   return res.redirect(`/videos/${id}`); //redirect()는, 브라우저가 redirect(자동으로 이동)하도록 하는 거다, /videos/id페이지로 리다이렉트 시켜줄거다
 };
 
@@ -47,7 +72,9 @@ export const postUpload = async (req, res) => {
       title,
       description,
       createdAt: Date.now(),
-      hashtags: hashtags.split(",").map((word) => `#${word}`),
+      hashtags: hashtags
+        .split(",")
+        .map((word) => (word.startsWith("#") ? word : `#${word}`)), //해시태그로 시작하면 그냥 word로 리턴할 거고 아닐 경우 #을 붙여 리턴할거다
     });
     return res.redirect("/");
   } catch (error) {
