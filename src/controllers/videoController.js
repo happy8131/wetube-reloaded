@@ -12,7 +12,7 @@ console.log("finished")
 */
 
 export const home = async (req, res) => {
-  const videos = await Video.find();
+  const videos = await Video.find({}).sort({ createdAt: "desc" }); //desc 내림차순 , asc 오름차순
   console.log(videos);
   return res.render("home", { pageTitle: "Home", videos });
 };
@@ -45,9 +45,7 @@ export const postEdit = async (req, res) => {
   await Video.findByIdAndUpdate(id, {
     title,
     description,
-    hashtags: hashtags
-      .split(",")
-      .map((word) => (word.startsWith("#") ? word : `#${word}`)),
+    hashtags: Video.formatHashtags(hashtags),
   });
   // video.title = title;
   // video.description = description;
@@ -72,9 +70,7 @@ export const postUpload = async (req, res) => {
       title,
       description,
       createdAt: Date.now(),
-      hashtags: hashtags
-        .split(",")
-        .map((word) => (word.startsWith("#") ? word : `#${word}`)), //해시태그로 시작하면 그냥 word로 리턴할 거고 아닐 경우 #을 붙여 리턴할거다
+      hashtags: Video.formatHashtags(hashtags),
     });
     return res.redirect("/");
   } catch (error) {
@@ -88,6 +84,27 @@ export const postUpload = async (req, res) => {
   //"food,movies,music".split(",").map(word=>`#${word}`) =>["#food","#movies","#music"] // 베열을 만들어 단어별 분리를 시킨 다음 #을 붙여준다
 };
 
+export const deleteVideo = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  await Video.findByIdAndDelete(id);
+  //delete video
+  return res.redirect("/");
+};
+
+export const search = async (req, res) => {
+  const { keyword } = req.query;
+  let videos = [];
+  if (keyword) {
+    videos = await Video.find({
+      title: {
+        $regex: new RegExp(`${keyword}$`, "i"),
+      },
+    });
+    console.log(videos);
+  }
+  return res.render("search", { pageTitle: "Search", videos });
+};
 /*async(비동기) -- await(수행될 때까지 기다려준다)
 => 데이터베이스가 데이터 찾을때까지 기다려준다(다음 것이 먼저 수행되는 것을 막음)
 에러는 try-catch문으로 잡는다.*/
