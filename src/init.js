@@ -9,3 +9,4 @@ const handleListening = () =>
   console.log(`✅ Server listenting on http://localhost:${PORT} 🚀`);
 
 app.listen(PORT, handleListening);
+//db를 mongoose와 연결시켜서 video model을 인식시킨다
