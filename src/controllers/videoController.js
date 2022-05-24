@@ -12,7 +12,7 @@ console.log("finished")
 */
 
 export const home = async (req, res) => {
-  const videos = await Video.find({}).sort({ createdAt: "desc" }); //desc 내림차순 , asc 오름차순
+  const videos = await Video.find({}).sort({ createdAt: "desc" }); // {}가 비어있으면 모든 형식을 찾는거다.  / desc 내림차순 , asc 오름차순
   console.log(videos);
   return res.render("home", { pageTitle: "Home", videos });
 };
