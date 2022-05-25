@@ -16,6 +16,7 @@ export const home = async (req, res) => {
   console.log(videos);
   return res.render("home", { pageTitle: "Home", videos });
 };
+
 export const watch = async (req, res) => {
   const { id } = req.params;
   const video = await Video.findById(id);
@@ -25,6 +26,7 @@ export const watch = async (req, res) => {
   }
   return res.render("watch", { pageTitle: video.title, video });
 };
+
 export const getEdit = async (req, res) => {
   const { id } = req.params;
   const video = await Video.findById(id);
@@ -33,11 +35,12 @@ export const getEdit = async (req, res) => {
   }
   return res.render("edit", { pageTitle: `Editing: ${video.title}`, video });
 };
+
 export const postEdit = async (req, res) => {
   const { id } = req.params;
 
   const { title, description, hashtags } = req.body;
-  const video = await Video.exists({ _id: id }); //true false로 리턴해준다
+  const video = await Video.exists({ _id: id }); //true false로 리턴해준다 , 영상이 없으면 false를 리턴한다
 
   if (video) {
     return res.status(404).render("404", { pageTitle: "Video not found" });

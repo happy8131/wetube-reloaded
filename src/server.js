@@ -43,6 +43,7 @@ export default app;
 3. 서버가 listening 상태로 브라우저에게 request를 get 메소드를 통해 받음 -> request 처리
 4. 서버가 브라우저의 request에 대한 response를 전달
  
+middlware는 중간(req와res의 중간)에 있는 software다.
  * 함수가 next()를 호출하면 그건 middleware다
  * 어떤 함수는 send를 사용하는데, 그렴 그건 middleware가 아니다.
  * logger는 미드웨어를 리턴해준다
