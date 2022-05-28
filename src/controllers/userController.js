@@ -56,7 +56,7 @@ export const postLogin = async (req, res) => {
   }
   console.log(user.password);
   // check if password correct
-  const ok = await bcrypt.compare(password, user.password);
+  const ok = await bcrypt.compare(password, user.password); //DB에 있는 해싱값 과 비교한다
   //비밀번호 체크
   if (!ok) {
     return res.status(400).render("login", {
