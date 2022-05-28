@@ -15,12 +15,12 @@ export const postJoin = async (req, res) => {
     });
   }
 
-  const exists = await User.exists({ $or: [{ username }, { email }] });
+  const exists = await User.exists({ $or: [{ username }, { email }] }); //존재하는지
 
   if (exists) {
     return res.status(400).render("join", {
       pageTitle,
-      errorMessage: "This username/email isalready taken.",
+      errorMessage: "This username/email is already taken.",
     });
   }
 
