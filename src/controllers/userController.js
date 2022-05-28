@@ -65,7 +65,7 @@ export const postLogin = async (req, res) => {
     });
   }
   console.log("LOG USER IN! Coming soon");
-  return res.redirect("/"); //로그인이되면 홈으로 이동한다
+  return res.redirect("/"); //로그인이되면 홈으로 이동한다.
 };
 
 export const edit = (req, res) => res.send("Edit User");
