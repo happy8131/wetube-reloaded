@@ -4,26 +4,21 @@ import bcrypt from "bcrypt";
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 
 export const postJoin = async (req, res) => {
-  console.log(req.body);
-  const { name, username, email, password1, password2, location } = req.body;
+  const { name, username, email, password, password2, location } = req.body;
   const pageTitle = "Join";
-
-  if (password1 !== password2) {
+  if (password !== password2) {
     return res.status(400).render("join", {
       pageTitle,
       errorMessage: "Password confirmation does not match.",
     });
   }
-
-  const exists = await User.exists({ $or: [{ username }, { email }] }); //존재하는지
-
+  const exists = await User.exists({ $or: [{ username }, { email }] }); //존재 하는지
   if (exists) {
     return res.status(400).render("join", {
       pageTitle,
       errorMessage: "This username/email is already taken.",
     });
   }
-
   try {
     await User.create({
       name,
@@ -40,6 +35,7 @@ export const postJoin = async (req, res) => {
     });
   }
 };
+
 export const getLogin = (req, res) =>
   res.render("login", { pageTitle: "Login" });
 
