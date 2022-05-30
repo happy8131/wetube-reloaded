@@ -61,6 +61,11 @@ export const postLogin = async (req, res) => {
     });
   }
   console.log("LOG USER IN! Coming soon");
+
+  //유저가 로그인하면 그 유저에 대한 정보를 세션에 담을거다. (세션에 정보를 추가한다.)
+  //req.session 객체에 정보를 저장하고 한다.
+  req.session.loggedIn = true;
+  req.session.user = user; //DB에서 찾은 user를 쓸거다 (각 브라우저마다 서로 다른 세션을 가지고 있다는걸 꼭 기억하자.)
   return res.redirect("/"); //로그인이되면 홈으로 이동한다.
 };
 

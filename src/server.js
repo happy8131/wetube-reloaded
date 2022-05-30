@@ -4,6 +4,7 @@ import session from "express-session";
 import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
+import { localsMiddleware } from "./middlewares";
 
 const app = express();
 const logger = morgan("dev");
@@ -19,8 +20,8 @@ app.use(
     resave: true,
     saveUninitialized: true,
   })
-);
-
+); //middleware 브라우저가 우리의 backend와 상호작용할 때마다 sesstion에 있는 옵션 middleware가 브라우저에 cookie를 전송한다
+//쿠키는 백엔드가 브라우저에 주는 정보
 app.use((req, res, next) => {
   req.sessionStore.all((error, sessions) => {
     console.log(sessions);
@@ -33,6 +34,7 @@ app.get("/add-one", (req, res, next) => {
   return res.send(`${req.session.id}\n${req.session.potato}`);
 });
 
+app.use(localsMiddleware);
 app.use("/", rootRouter);
 app.use("/videos", videoRouter); // url이 /videos로 시작하면 express는 비디오 라우터 안에 들어가고 그리고 /watch를 찾을거다
 app.use("/users", userRouter);
