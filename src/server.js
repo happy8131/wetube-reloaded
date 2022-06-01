@@ -1,3 +1,4 @@
+require("dotenv").config();
 import express from "express";
 import morgan from "morgan";
 import session from "express-session";
@@ -17,10 +18,10 @@ app.use(express.urlencoded({ extended: true })); //form의 value들을 이해할
 
 app.use(
   session({
-    secret: "Hello!",
-    resave: true,
-    saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: "mongodb://127.0.0.1:27017/wetube" }),
+    secret: process.env.COOKIE_SECRET, //쿠키에 sign 할 때 사용하는 string이다 (쿠키에 sign하는 이유는 백엔드가 쿠키를 줬다는걸 보여주기 위함이다)
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 ); //middleware 브라우저가 우리의 backend와 상호작용할 때마다 sesstion에 있는 옵션 middleware가 브라우저에 cookie를 전송한다
 //쿠키는 백엔드가 브라우저에 주는 정보
