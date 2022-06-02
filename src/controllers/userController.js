@@ -69,7 +69,31 @@ export const postLogin = async (req, res) => {
   return res.redirect("/"); //로그인이되면 홈으로 이동한다.
 };
 
+export const startGithubLogin = (req, res) => {
+  const baseUrl = "https://github.com/login/oauth/authorize";
+  const config = {
+    client_id: "9fac726866be2ff14f36",
+    allow_signup: false,
+    scope: "read:user user:email",
+  };
+
+  const params = new URLSearchParams(config).toString(); //url 주소가 인코딩 된다.
+  const finalUrl = `${baseUrl}?${params}`;
+  return res.redirect(finalUrl);
+};
+
+export const finishGithubLogin = (req, res) => {};
+
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
 export const logout = (req, res) => res.send("Log out");
 export const see = (req, res) => res.send("See User");
+
+/*
+깃헙 로그인
+1. 사용자들은 깃헙 신원을 요청하기 위해 redirect 됩니다
+2. 인증한다
+
+
+scope는 유저에게서 얼마나 믾이 정보를 읽어내고 어떤 정보를 가져올 것에 대한거다.
+*/

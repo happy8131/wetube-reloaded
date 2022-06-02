@@ -21,7 +21,7 @@ app.use(
     secret: process.env.COOKIE_SECRET, //쿠키에 sign 할 때 사용하는 string이다 (쿠키에 sign하는 이유는 백엔드가 쿠키를 줬다는걸 보여주기 위함이다)
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
+    store: MongoStore.create({ mongoUrl: process.env.DB_URL }), //세션을 몽고DB에 저장한다 서버를 재시작해도 로그인이 유지가 된다 몽고디비에 저장 되어 있기 때문.
   })
 ); //middleware 브라우저가 우리의 backend와 상호작용할 때마다 sesstion에 있는 옵션 middleware가 브라우저에 cookie를 전송한다
 //쿠키는 백엔드가 브라우저에 주는 정보
@@ -72,4 +72,6 @@ req.body에는 form을 통해 submit된 데이터의 키-값 쌍을 포함합니
 즉, 브라우져에서 서버에 로그인 요청을 해서 로그인이 되면 서버는 세션id를 response해주고
 브라우져는 쿠키스토리지에 그 세션id를 보관하고 있다가 이후 다시 서버에 방문할 시에는 그 세션
 id만 보여주면 자동으로 로그인되게 해줘서 계속 로그인할 수고를 덜어준다는 것이겠군요.
+
+session id는 쿠키에 저장하지만, 데이터 자체는 서버에 저장된다.
  */
